@@ -1,0 +1,70 @@
+Client Documentation:
+
+1. Client established a TCP connection with server
+2. Client sends PKT_USERINFO
+3. Client receives PKT_USERINFO
+4. Client sends PKT_FILE
+
+- The server will ignore PKT_FILE if client has not successfully
+      logged in using PKT_USERINFO.
+
+- The server can receive multiple files from the same client
+      simultaneously.
+
+- Files are distinguished by their filename.
+
+Packets
+-------
+
+Legend:
+
+BYTE - 1 byte
+DWORD - 3 bytes
+NTString - A string that ends with character 0 (null-terminated)
+BYTE-Array - Remaining bytes in packet. Determined using Length
+             DWORD from packet header after removing other parts
+             of packet.
+
+
+----------------
+Packet Header:
+----------------
+BYTE	PacketId
+DWORD	Length
+----------------
+Data
+----------------
+
+[C>S] PKT_USERINFO (0x01)
+
+NTString	Username
+NTString	Password
+
+[S>C] PKT_USERINFO (0x01)
+
+BYTE	Result
+
+Result:
+0 = Failed login
+1 = Login successful
+
+[C>S] PKT_FILE (0x02)
+
+// This packet has 2 version. The first time a new file is sent
+     it includes a DWORD for length.
+
+// Any consecutive time it does not include the Length DWORD
+
+// The length of the BYTE-Array is determined from the packet
+     header minus the other parts of the packet.
+
+First part of file:
+
+NTString	Filename
+DWORD		Length
+BYTE-Array	File Data
+
+Remaining file parts:
+
+NTString	Filename
+BYTE-Array	File Data

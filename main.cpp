@@ -366,8 +366,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 						   WS_OVERLAPPED | WS_MINIMIZEBOX | WS_SYSMENU,
 						   CW_USEDEFAULT,
 						   CW_USEDEFAULT,
-						   875,
-						   400,
+						   888,
+						   668,
 						   NULL,
 						   NULL,
 						   hInstance,
@@ -606,13 +606,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 			bClose = CreateWindowEx(0, L"Button", L"&Close Server", DefaultStyles | WS_DISABLED, 264, 8, 113, 33, hWnd, IDM_CLOSE, WinInstance, NULL);
 			if (bClose)
 				SetFont(bClose);
-			tLog = CreateWindowEx(WS_EX_CLIENTEDGE, L"Edit", L"", DefaultStyles | ES_READONLY | ES_MULTILINE | WS_VSCROLL | ES_AUTOVSCROLL, 16, 48, 400, 305, hWnd, 0, WinInstance, 0);
+			tLog = CreateWindowEx(WS_EX_CLIENTEDGE, L"Edit", L"", DefaultStyles | ES_READONLY | ES_MULTILINE | WS_VSCROLL | ES_AUTOVSCROLL, 16, 48, 450, 344, hWnd, 0, WinInstance, 0);
 			if (tLog)
 				SetFont(tLog);
-			lsClients = CreateWindowEx(WS_EX_CLIENTEDGE, L"Listbox", L"", DefaultStyles | WS_VSCROLL, 430, 48, 420, 120, hWnd, 0, WinInstance, 0);
+			lsClients = CreateWindowEx(WS_EX_CLIENTEDGE, L"Listbox", L"", DefaultStyles | WS_VSCROLL, 480, 48, 376, 280, hWnd, 0, WinInstance, 0);
 			if (lsClients)
 				SetFont(lsClients);
-			lsFiles = CreateWindowEx(WS_EX_CLIENTEDGE, L"Listbox", L"", DefaultStyles | WS_VSCROLL, 430, 173, 420, 185, hWnd, 0, WinInstance, 0);
+			lsFiles = CreateWindowEx(WS_EX_CLIENTEDGE, L"Listbox", L"", DefaultStyles | WS_VSCROLL, 16, 400, 840, 220, hWnd, 0, WinInstance, 0);
 			if (lsFiles)
 				SetFont(lsFiles);
 		}

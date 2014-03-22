@@ -48,6 +48,8 @@ std::wstring GetTime();
 int FindIndex(SOCKET Socket);
 bool MatchString(std::wstring First, std::wstring Second, bool CaseSensitive = false);
 void DisplayFile(std::string Filename, const int Position, const int Size);
+std::wstring GetEXEDirectory();
+void CreateImageDirectory();
 
 // Winsock functions & variables
 bool StartWinsock();
@@ -73,8 +75,14 @@ public:
 										   m_Filename(Filename),
 										   m_Size(Size)
 	{
+		// Create 'imgs' directory to store files if doesn't already exists
+		CreateImageDirectory();
+
+		std::wstring ImagePath(GetEXEDirectory() + L"\\imgs\\");
+		std::string sImagePath(ImagePath.begin(), ImagePath.end());
+
 		// Open file for binary writing
-		m_Stream = std::ofstream("imgs\\" + m_Filename, std::ios::binary);
+		m_Stream = std::ofstream(sImagePath + m_Filename, std::ios::binary);
 
 		// Display file in listbox lsFiles
 		std::wstringstream Text;
@@ -512,6 +520,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 		{
 			if (LOWORD(wParam) == (WORD)IDM_START)
 			{
+				// Create 'imgs' directory to store files if doesn't already exists
+				CreateImageDirectory();
+
 				// Get port from textbox
 				int Length = SendMessage(tPort, WM_GETTEXTLENGTH, NULL, NULL);
 				std::wstring Text;
@@ -745,6 +756,39 @@ void DisplayFile(std::string Filename, const int Position, const int Size)
 			--ItemIndex;
 		}
 	}
+};
+
+std::wstring GetEXEDirectory()
+{
+	wchar_t Buffer[MAX_PATH];
+	GetModuleFileName(NULL, Buffer, MAX_PATH);
+	std::wstring::size_type Position = std::wstring(Buffer).find_last_of(L"\\/");
+	return std::wstring(Buffer).substr(0, Position);
+};
+
+void CreateImageDirectory()
+{
+	bool DirectoryExists = false;
+	std::wstring ImageDirectory(GetEXEDirectory() + L"\\imgs");
+	DWORD FileType = GetFileAttributes(ImageDirectory.c_str());
+
+	if (FileType & FILE_ATTRIBUTE_DIRECTORY)
+		DirectoryExists = true;
+
+	// Check if file attribute error
+	if (FileType == INVALID_FILE_ATTRIBUTES)
+	{
+		DirectoryExists = true;
+
+		// Determine file attribute error means file directory not found, other errors mean attributes not accessible
+		DWORD Error = GetLastError();
+		if ((Error == ERROR_FILE_NOT_FOUND) || (Error == ERROR_PATH_NOT_FOUND) || (Error == ERROR_INVALID_NAME) || (Error == ERROR_BAD_NETPATH))
+			DirectoryExists = false;
+	}
+
+	// If directory doesn't exist, create it
+	if (!DirectoryExists)
+		CreateDirectory(ImageDirectory.c_str(), NULL);
 };
 
 bool StartWinsock()

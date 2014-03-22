@@ -18,13 +18,12 @@ Packets
 
 Legend:
 
-BYTE - 1 byte
-DWORD - 3 bytes
-NTString - A string that ends with character 0 (null-terminated)
-BYTE-Array - Remaining bytes in packet. Determined using Length
-             DWORD from packet header after removing other parts
-             of packet.
-
+BYTE		1 byte
+DWORD		4 bytes
+NTString	A string that ends with character 0 (null-terminated)
+BYTE-Array	Remaining bytes in packet. Determined using Length
+		  DWORD from packet header after removing other parts
+		  of packet.
 
 ----------------
 Packet Header:

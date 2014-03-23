@@ -440,11 +440,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 
 					if (BufferLength)
 					{
-						// Append Buffer to Client's Buffer
-						pClient->Buffer.insert(pClient->Buffer.end(), Buffer, Buffer + BufferLength);
-						
-						// Create Data variable and fill with unprocess received data
+						// Create Data variable and fill with unprocessed data and new data
 						std::vector<char> Data(pClient->Buffer);
+						Data.insert(Data.end(), Buffer, Buffer + BufferLength);
 
 						do
 						{
@@ -470,7 +468,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT Message, WPARAM wParam, LPARAM lParam)
 							else
 							{
 								// If not enough data for a complete packet, add remaining data to Client's buffer
-								pClient->Buffer.insert(pClient->Buffer.end(), Data.begin(), Data.end());
+								pClient->Buffer.clear();
+								pClient->Buffer = Data;
 								Data.clear();
 							}
 						}
